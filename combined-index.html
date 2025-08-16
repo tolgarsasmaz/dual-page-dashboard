@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIODERMA Ecosystem & Forecast Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>BIODERMA Ecosystem & Forecast Dashboard</h1>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-navigation">
+            <button id="tab-ecosystem" class="tab-button active" onclick="switchTab('ecosystem')">Ecosystem Mapping</button>
+            <button id="tab-forecast" class="tab-button" onclick="switchTab('forecast')">Forecast Planning</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Ecosystem Tab -->
+            <div id="ecosystem-tab" class="tab-content active">
+                <div class="graph-container">
+                    <!-- Column Labels -->
+                    <div class="column-labels">
+                        <div class="column-label">Traffic Sources</div>
+                        <div class="column-label">BIODERMA Web</div>
+                        <div class="column-label">Retailers</div>
+                    </div>
+
+                    <!-- Network Graph -->
+                    <svg id="network-graph"></svg>
+
+                    <!-- Tooltip -->
+                    <div id="tooltip" class="tooltip"></div>
+                </div>
+
+                <!-- Right Panel -->
+                <div id="right-panel" class="right-panel">
+                    <div class="panel-header">
+                        <h3>Details</h3>
+                        <button class="btn btn--sm btn--outline" onclick="closeRightPanel()">×</button>
+                    </div>
+                    <div id="panel-content" class="panel-content">
+                        <p>Click on a node to see detailed information.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Tab -->
+            <div id="forecast-tab" class="tab-content">
+                <div class="main-layout">
+                    <!-- Left Panel -->
+                    <div class="left-panel">
+                        <!-- Retailer Filter -->
+                        <div class="panel-section">
+                            <h3>Retailer Filter</h3>
+                            <div id="retailer-filter" class="checkbox-list">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- 2026 Sell-In Targets -->
+                        <div class="panel-section">
+                            <h3>2026 Sell-In Targets</h3>
+                            <div id="target-list" class="target-list">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- Baseline Metrics -->
+                        <div class="panel-section">
+                            <h3>Baseline Metrics</h3>
+                            <div class="baseline-cards">
+                                <div class="metric-card">
+                                    <div class="metric-label">2025 Sell-Out YTD</div>
+                                    <div id="sellout-ytd" class="metric-value">€0</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">2025 Annualized</div>
+                                    <div id="annualized" class="metric-value">€0</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">2026 Baseline Forecast</div>
+                                    <div id="baseline-forecast" class="metric-value">€0</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">2026 Sell-In Required</div>
+                                    <div id="sellin-required" class="metric-value">€0</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Gap to Target</div>
+                                    <div id="gap-to-target" class="metric-value gap">€0 (0%)</div>
+                                </div>
+                            </div>
+
+                            <div class="toggle-group">
+                                <label>
+                                    <input type="checkbox" checked onchange="toggleSeasonality(this.checked)">
+                                    Apply Seasonality
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Canvas -->
+                    <div class="main-canvas">
+                        <!-- Baseline Forecast Section -->
+                        <div class="canvas-section">
+                            <h2>Baseline Forecast</h2>
+                            
+                            <!-- Monthly Trend Chart -->
+                            <div class="charts-container">
+                                <div class="chart-wrapper">
+                                    <h4>Monthly Trend</h4>
+                                    <div class="chart-container">
+                                        <canvas id="monthly-trend-chart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Seasonality Heatmap -->
+                                <div class="chart-wrapper">
+                                    <h4>Seasonality Heatmap</h4>
+                                    <div class="chart-container">
+                                        <canvas id="seasonality-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Baseline Summary Table -->
+                            <div class="baseline-table-wrapper">
+                                <h4>Baseline Summary</h4>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Retailer</th>
+                                            <th>2025 YTD</th>
+                                            <th>Annualized</th>
+                                            <th>2026 Baseline</th>
+                                            <th>STR</th>
+                                            <th>Sell-In Required</th>
+                                            <th>Target</th>
+                                            <th>Gap (€)</th>
+                                            <th>Gap (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="baseline-table-body">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Campaigns Section -->
+                        <div class="canvas-section">
+                            <h2>Advertising Campaigns</h2>
+                            
+                            <div class="campaign-actions">
+                                <button class="btn btn--primary" onclick="showCampaignModal()">Add to Forecast: Advertising Campaign</button>
+                            </div>
+
+                            <div id="campaign-list" class="campaign-list">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- Summary Section -->
+                        <div class="canvas-section">
+                            <h2>Forecast Summary</h2>
+                            
+                            <div class="retailer-summary">
+                                <h4>Retailer Performance Overview</h4>
+                                <div id="retailer-grid" class="retailer-grid">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel (Recommendations) -->
+                    <div class="right-panel">
+                        <div class="panel-header">
+                            <h3>AI Recommendations</h3>
+                        </div>
+                        <div class="panel-content">
+                            <div class="recommendations-list">
+                                <div class="recommendation-item">
+                                    <div class="recommendation-type">Budget Optimization</div>
+                                    <p>Consider reallocating 15% of paid search budget to paid social for better ROAS on Shop Apotheke.</p>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-type">Channel Expansion</div>
+                                    <p>AI Engines show strong growth potential. Consider dedicating budget for voice search optimization.</p>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-type">Seasonal Planning</div>
+                                    <p>Q4 shows highest seasonality index. Plan campaign acceleration for October-December.</p>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="recommendation-type">Retailer Focus</div>
+                                    <p>DocMorris underperforming vs target. Consider retailer-specific promotional campaigns.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Campaign Modal -->
+    <div id="campaign-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="hideCampaignModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Advertising Campaign</h3>
+                <button class="btn btn--sm btn--outline" onclick="hideCampaignModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Campaign Name</label>
+                            <input type="text" id="campaign-name" class="form-control" placeholder="Enter campaign name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Budget (€)</label>
+                            <input type="number" id="campaign-budget" class="form-control" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Ad Type</label>
+                            <select id="campaign-ad-type" class="form-control" required>
+                                <option value="">Select Ad Type</option>
+                                <option value="Paid Social">Paid Social</option>
+                                <option value="Paid Search">Paid Search</option>
+                                <option value="Paid Display">Paid Display</option>
+                                <option value="Paid Message">Paid Message</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Source</label>
+                            <select id="campaign-source" class="form-control" required>
+                                <option value="">Select Source</option>
+                                <option value="Meta">Meta</option>
+                                <option value="Tiktok">Tiktok</option>
+                                <option value="Google">Google</option>
+                                <option value="Retailer">Retailer</option>
+                                <option value="Youtube">Youtube</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Domain</label>
+                            <select id="campaign-domain" class="form-control" required>
+                                <option value="">Select Domain</option>
+                                <option value="Bioderma">Bioderma</option>
+                                <option value="Shop Apotheke">Shop Apotheke</option>
+                                <option value="ApoDiscounter">ApoDiscounter</option>
+                                <option value="Amazon">Amazon</option>
+                                <option value="Zalando">Zalando</option>
+                                <option value="Flaconi">Flaconi</option>
+                                <option value="MPK">MPK</option>
+                                <option value="MedPex">MedPex</option>
+                                <option value="TNA">TNA</option>
+                                <option value="Sanicare">Sanicare</option>
+                                <option value="DM">DM</option>
+                                <option value="Douglas">Douglas</option>
+                                <option value="DM Austria">DM Austria</option>
+                                <option value="Galaxus">Galaxus</option>
+                                <option value="DocMorris">DocMorris</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Funnel</label>
+                            <select id="campaign-funnel" class="form-control">
+                                <option value="">Select Funnel</option>
+                                <option value="Awareness">Awareness</option>
+                                <option value="Consideration">Consideration</option>
+                                <option value="Conversion">Conversion</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Result Type</label>
+                            <select id="campaign-result-type" class="form-control">
+                                <option value="">Select Result Type</option>
+                                <option value="Clicks">Clicks</option>
+                                <option value="Transactions">Transactions</option>
+                                <option value="Reach">Reach</option>
+                                <option value="Engagements">Engagements</option>
+                                <option value="ROAS">ROAS</option>
+                                <option value="ThruPlay">ThruPlay</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expected ROAS</label>
+                            <input type="number" id="campaign-roas" class="form-control" placeholder="2.5" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Campaign Duration</label>
+                        <div class="date-range">
+                            <select id="campaign-start-month" class="form-control">
+                                <option value="">Start Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <select id="campaign-end-month" class="form-control">
+                                <option value="">End Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" onclick="hideCampaignModal()">Cancel</button>
+                <button class="btn btn--primary" onclick="addCampaign()">Add Campaign</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="combined-app.js"></script>
+</body>
+</html>
