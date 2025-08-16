@@ -1,0 +1,336 @@
+BIODERMA Dual-Tab Dashboard
+
+Tabs: (1) Customer Journey (CJ) • (2) 2026 Forecast
+
+0) Scope & Data (use only these sources)
+
+Files live in the same folder and are read locally (UTF-8, comma-sep). If field names differ, normalize safely (trim, lowercase, replace spaces with _). No invented numbers—derive everything from these files:
+
+AWARENESS.csv, CONSIDERATION.csv, CONVERSION.csv
+
+RETAIL AD PERFORMANCE.csv
+
+Retailer Detailed.csv (contains 2026 Sell-In targets)
+
+BIODERMA Web Referral Sell Outs by Channel Group and source.csv
+
+Market Sell Out Data.csv
+
+2025 Official Retailer Sell Outs.csv
+
+Organic Search.csv
+
+Currency parsing: strip €, spaces, ,, NEW, € - → numeric; missing → 0.
+Dates: Year/Month; YTD means Jan…current month 2025; YoY compares same period vs 2024.
+
+Very important domain rule:
+BIODERMA is a domain, not a retailer. It does not book sales. Revenue attributed to BIODERMA Web must be routed to e-retailers using the “BIODERMA Web Referral …” shares. If domain is a retailer (e.g., Shop Apotheke), revenue books directly to that retailer.
+
+1) Global Rules
+
+Single-page app with two tabs: Customer Journey and 2026 Forecast.
+
+Default time view: YTD 2025 (toggle to Q1 2025 / last 3 months / custom).
+
+Numbers: K/M abbreviations, thousand separators, ▲/▼ with YoY %, and “—” for missing.
+
+All % “shares” are within parent context (i.e., node ÷ parent total).
+
+All calculations deterministic (no randomness).
+
+Graceful handling for missing fields; never crash or emit NaN in UI.
+
+2) TAB #1 — Customer Journey (CJ)
+2.1 Graph layout & hierarchy (left → right)
+
+Channel Groups → BIODERMA Web → Sales destinations
+
+Channel Groups (left, fixed order):
+Paid Social (Meta/YouTube/TikTok), Organic Social, Paid Search (Google), Organic Search, Direct, AI Engines, Referral.
+Each group connects to BIODERMA Web. Each group expands via a small (+) to reveal Sources (Meta, TikTok, YouTube, Google, etc.).
+
+From BIODERMA Web to the right:
+
+Official e-Retailers (aggregate node) → children: DocMorris, Sanicare, Medpex, MPK, ApoDiscounter, TNA, Amazon, Shop Apotheke, Flaconi.
+
+Traffic-Routed Pharmacies (aggregate node) → Pharmacy Sales.
+
+Also include “Other e-Retailers / Other Pharmacies” aggregates and the total “Online Sales / Total Sell-Outs” reconciliation nodes.
+
+Spacing (for readability):
+Channels → Web (140–180 px), Web → Official e-Retailers / Pharmacies (220–260 px), Official → individual retailers (160–200 px).
+
+2.2 Node labels (2 lines, compact)
+
+Line 1 (primary): Sell-Out Revenue (€) (for pharmacy path, use Clicks), Share % within parent, YoY %.
+
+Line 2 (secondary): Clicks, Share % (by clicks or revenue, context-aware), YoY %.
+
+Share formulas:
+
+Group Share = group_SO / Σ(group_SO) among all groups feeding BIODERMA Web
+
+Source Share = source_SO / parent_group_SO
+
+Retailer Share = retailer_SO / official_e_retailers_SO
+
+Pharmacy Click Share = clicks / total_clicks_to_pharmacy_path
+
+2.3 Right-side panel — Node Analytics (varies by node type)
+A) Channel Group nodes (e.g., Paid Social/Search, Organic Search/Social, Direct, Referral, AI Engines)
+
+Key Performance (4 tiles):
+
+Clicks (YoY arrow)
+
+Revenue (€) (YoY arrow)
+
+Traffic Share % (within BIODERMA Web)
+
+Revenue Share % (within BIODERMA Web)
+
+Marketing Funnel Analysis (tabs):
+
+Awareness: Impressions, Reach, CPM (€)
+
+Consideration: Clicks, CTR, CPC (€)
+
+Conversion: Conversions/Transactions, CVR (%), CPA (€)
+
+If paid: read spend/ROAS where available; if organic: show Clicks/Revenue/YoY.
+
+B) Source nodes (e.g., Meta, TikTok, YouTube, Google)
+
+Paid sources: Impressions, Reach, Clicks, CTR, CPC, CPM, Spend, Retail Ad Revenue, ROAS, Total Retail Ad ROAS
+
+Organic sources: Clicks, CTR, Sell-Out Revenue, YoY%
+
+Optional chart: mini time series (Revenue & Clicks; secondary axis for CTR/ROAS)
+
+C) BIODERMA Web node
+
+Tiles: Total Web Traffic (Clicks), Generated Revenue (€), YoY
+
+Pie: Revenue Contribution by Channel Group (Paid Social, Paid Search, Organic Search, Direct, Referral, AI Engines)
+
+Table (Top Sources): Source | Clicks | Revenue | Share % | YoY%
+
+Optional Sankey: Channels → (BIODERMA Web) → destinations (Official e-Retailers / Pharmacies)
+
+D) Official e-Retailers (aggregate)
+
+Tiles: Total Sell-Out (€), YoY%, % of Online Sales
+
+Table: Retailer | Sell-Out | YoY% | % of Official e-Retailers (sortable)
+
+Chart: Pareto bar (contribution by retailer)
+
+E) Single Retailer (e.g., Shop Apotheke)
+
+Sell-In Performance: 2026 Sell-In Target, YTD Sell-In, Goal Completion %
+
+Sell-Out Breakdown (tabs):
+
+Retail Ads (from retail ad performance)
+
+BIODERMA Web Traffic (referrals routed from BIODERMA)
+
+Other Sources (= Total Sell-Out − (Retail Ads + BIODERMA Web))
+Each tab shows Revenue (€) and Revenue Share % tiles.
+
+Optional visuals: Gauge for % target, monthly sell-out bars.
+
+F) Traffic-Routed Pharmacies (aggregate)
+
+Label priority: Clicks + YoY Click%
+
+Tiles: Total Clicks, YoY Clicks %, Click Share %
+
+Table override: fixed breakdown (channels/sources)
+
+Charts: pie (by Channel Group), bar (by Source)
+
+G) Aggregate nodes (Other e-Retailers / Online Sales / Other Pharmacies / Pharmacy Sales / Total Sell-Outs)
+
+Tiles: totals + YoY%
+
+Donut: children shares
+
+Reconciliation badge: ✅ if children sum ≈ parent; ⚠️ otherwise
+
+2.4 CJ Calculations
+
+YoY % = (value_2025 – value_2024) / value_2024 for the same period
+
+Share % = node_value / parent_total
+
+ROAS = retail_ad_revenue / retail_ad_cost
+
+% Target Completion = YTD_Sell-In / Target_2026
+
+2.5 CJ UX
+
+Node = rounded rectangle + soft glow; “(+)” reveals children.
+
+Zoom in/out, Fit to Screen, Reset Layout; remember pinned positions via localStorage.
+
+3) TAB #2 — 2026 Forecast (deterministic; scenario-based)
+3.1 Page layout
+
+Top bar: date selector (use 2024/2025 learning), country = DE, Export Forecast CSV.
+
+Left sidebar: retailer multi-filter; baseline tiles (2025 Sell-Out (YTD & annualized), 2026 Baseline Sell-Out, Required 2026 Sell-In, Gap to Target (€/%)) with “Apply seasonality” toggle (default ON).
+
+Main area:
+A) Baseline Forecast (monthly trend + table)
+B) Campaign Scenarios (add 0..N campaigns)
+C) Total Forecast Summary (contribution %, waterfall, stacked bars, ±1σ band)
+
+Right panel: Recommendations (max 5 cards)
+
+3.2 Keys & scope
+
+Primary key: RetailerID (fallback: normalized RetailerName).
+
+Only Official e-Retailers are in scope for the revenue forecast.
+
+3.3 Baseline 2026 (media-free)
+
+Learning window: 2024 full year + 2025 YTD (monthly).
+
+Seasonality indices (by month):
+S_m = avg( revenue_m / avg_monthly_revenue_year )
+
+Trend: linear trend on monthly sell-out; project into 2026.
+
+Per-retailer 2026 monthly baseline:
+(avg(2025_monthly_SO) * trend_growth) * S_m (respect existing monthly pattern if available).
+
+Save web→retailer shares from 2025 YTD to distribute BIODERMA-routed uplifts.
+
+Sell-In link:
+STR_2025 = SellOut_2025 / SellIn_2025YTD (if missing, use cohort median or 1.0)
+Baseline_SI_2026 = Σ(Baseline_SO_2026_m) / max(STR_2025, 0.01)
+
+Gap: Gap_€ = Target_SI_2026 – Baseline_SI_2026, Gap_% = Gap_€ / Target_SI_2026
+
+3.4 Campaign input drawer
+
+Budget (€), Ad Type (Retailer Ad, Paid Search/Social/Display/Message), Source (meta, tiktok, youtube, google, e-retailers), Date range (months in 2026), Domain (BIODERMA or a specific retailer), Funnel (Awareness/Consideration/Conversion), Result Type (Clicks/Transactions/Reach/ThruPlay/Engagements/ROAS).
+
+Validation: budget > 0; 2026 month range; domain “BIODERMA” means routing via web shares.
+
+3.5 Campaign forecasting algorithm (deterministic, back-off)
+
+Historical efficiency back-off (Tier 1 → 4):
+
+Exact match of (AdType, Source, Funnel, ResultType, Domain, month±1)
+
+Drop Domain, keep (AdType, Source, Funnel, ResultType, month)
+
+(AdType, Source, Funnel, ResultType) across months
+
+Global averages by AdType (failsafe)
+
+Metric bundles by ResultType:
+
+Clicks → CPC; Engagements → CPE; ThruPlay/Reach → CPV/CPM; Transactions → CPA; ROAS → Budget × ROAS (direct).
+If not ROAS-driven, convert to Revenue via CVR & AOV from history:
+Conversions = Proxy_Metric × CVR → Revenue = Conversions × AOV.
+
+Monthly allocation: distribute budget across selected months using seasonality weights S_m.
+Domain routing:
+
+If domain = BIODERMA, book uplift to BIODERMA Web, then distribute to retailers using web→retailer shares.
+
+If domain = Retailer, book uplift 100% to that retailer.
+
+Link to Sell-In:
+Campaign_SO = Σ(Revenue_m);
+Campaign_SI = Campaign_SO / max(STR_2025, 0.01);
+Total_SO_2026 = Baseline_SO + ΣCampaign_SO;
+Total_SI_2026 = Baseline_SI + ΣCampaign_SI.
+Optionally dampen over-saturation (same retailer+source dominating) with a 0.9 factor.
+
+3.6 Non-paid initiatives (Referral & AI Engines)
+
+For Referral and AI Engines initiatives (uplift without media budget):
+
+Inputs: Uplift % or Expected Additional Visits, plus date range; channel = Referral or AI Engines; domain = BIODERMA or retailer.
+
+If uplift %: add_visits_m = baseline_visits[channel][m] × uplift%
+
+If expected visits: distribute across months by seasonality.
+
+Convert to revenue via site CVR and AOV benchmarks for that channel.
+
+Routing rule identical to paid (BIODERMA → share to retailers; retailer → direct).
+
+3.7 KPIs, uncertainty band, edge cases
+
+Campaign card: Budget, Forecasted Result, Clicks, Conversions, Revenue, ROAS, CPA/CPC/CPM/CPV, Contribution %, affected retailers.
+
+Retailer summary: Baseline SO 2026, Campaign Uplift, Total SO 2026, 2026 Target, Forecast SI 2026, %Target Completion, Gap (€/%).
+
+±1σ band: from variance of historical efficiencies (ROAS_std×Budget or CPC/CPA propagation).
+
+No match: show “Insufficient historical match…”; Retailer Ads missing for a retailer → ROAS 0 (no made-up values).
+
+3.8 Visuals & export
+
+Baseline charts: 2024, 2025, 2026 monthly lines; seasonality heatmap (per retailer).
+
+Scenarios: Waterfall (Baseline → +C1 → … → Total 2026), Stacked contributions (%).
+
+Retailer tile grid: Target 2026, Forecast SI 2026, %Target, Gap (€/%), mini sparkline.
+
+Export CSV (campaign × retailer):
+CampaignID, AdType, Source, Funnel, ResultType, Domain, Budget, StartMonth, EndMonth, Retailer, Uplift_SO, Uplift_SI, ROAS, CPC/CPM/CPA(if relevant), CVR, AOV, Notes
+
+4) Data → KPI mapping (field-level summary)
+
+AWARENESS/CONSIDERATION/CONVERSION.csv: Awareness/Consideration/Conversion metrics (Impressions, Reach, ThruPlays/Engagements, Clicks, CTR, CPC, CPM, Spend, Transactions, Revenue, ROAS, CPA).
+
+RETAIL AD PERFORMANCE.csv: retail ad cost/revenue/ROAS by retailer & date.
+
+Retailer Detailed.csv: Sell-In Target 2026 (and YTD sell-in if provided) for target completion.
+
+BIODERMA Web Referral … .csv: clicks & sell-out revenue by channel group / source → web→retailer attribution shares.
+
+Market Sell Out Data.csv / 2025 Official Retailer Sell Outs.csv: retailer-level sell-out + YoY.
+
+Organic Search.csv: organic KPI tables for Source/Keyword categories.
+
+5) Reconciliation & validation
+
+At aggregate nodes, show ✅ if sum(children) ≈ parent; ⚠️ otherwise (with tooltip delta).
+
+Never mix yearly totals; if a retailer has no retail-ad history, show 0 and informative note.
+
+6) Delivery & tech constraints
+
+No external CDN at runtime (corporate network may block). Provide a static build:
+
+Option A (preferred): Single-file offline build index.single.html with inlined CSS, JS, and JSON; no fetch calls; double-click to open.
+
+Option B: dist/ folder with index.html, style.css, app.js, plus local copies/bundled D3 and Chart.js (no internet). dashboard_data.json must sit next to index.html and be loaded via a relative path (./dashboard_data.json).
+
+Console must be clean (no errors/NaN). Minimal logs only (“Initializing…”, “Recomputed…”).
+
+7) Acceptance tests (must pass)
+
+CJ-1 Channels visible in YTD 2025; Sources expand with “(+)”; node labels show 2 lines with Revenue/Clicks, Shares, YoY exactly as specified.
+CJ-2 Clicking a Channel Group opens the right panel with 4 KPIs (Clicks, Revenue, Traffic Share, Revenue Share) + the 3 funnel tabs (Awareness/Consideration/Conversion) and correct metrics.
+CJ-3 BIODERMA Web panel shows Total Web Traffic, Generated Revenue, Channel Group pie, Top Sources table.
+CJ-4 Retailer panel shows Sell-In Performance and Sell-Out Breakdown tabs (Retail Ads / BIODERMA Web / Other Sources) with Revenue & Share tiles.
+CJ-5 Traffic-Routed Pharmacies panel shows Clicks KPIs and the fixed breakdown table.
+CJ-6 Aggregate nodes display donut shares and reconciliation badge.
+
+F-1 With zero campaigns, 2026 forecast = seasonality + trend baseline; tiles show Target completion and Gap.
+F-2 Retailer Ads campaign for a retailer with no historical ROAS yields 0 revenue (deterministic).
+F-3 Paid Social campaign respects the ResultType bundles and computes CPC/CPA/CPM/ROAS correctly.
+F-4 Domain = BIODERMA routes uplift to BIODERMA Web then distributes to retailers via web shares.
+F-5 Export CSV (campaign×retailer) totals match on-screen aggregates.
+F-6 Contribution % matches waterfall & stacked charts.
+
+Reminder: Keep CJ tab exactly aligned with the specified hierarchy and Node Analytics panels (as in the provided screenshots). Keep Forecast tab aligned with the deterministic baseline, campaign algorithm, attribution, and exports above. Deliver a CDN-free static build (ideally single-file) that opens offline with a double-click.
