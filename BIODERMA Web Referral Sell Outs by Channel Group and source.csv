@@ -1,0 +1,96 @@
+﻿Retailer,Channel Group,Source,Clicks,Clicks Share %,Revenue,Revenue Share %
+Pharmacies,Direct,Direct,"1,100",20%," € 21,611 ",21%
+Pharmacies,Organic Search,bing,77,1%," € 1,268 ",1%
+Pharmacies,Organic Search,duckduckgo,21,0%, € 273 ,0%
+Pharmacies,Organic Search,google,"2,202",40%," € 39,830 ",39%
+Pharmacies,Organic Search,qwant,2,0%, € 57 ,0%
+Pharmacies,Organic Search,reddit,3,0%, € 66 ,0%
+Pharmacies,Organic Social,meta,1,0%, € 13 ,0%
+Pharmacies,Organic Video,youtube,2,0%, € 34 ,0%
+Pharmacies,Paid Search,google,"1,819",33%," € 34,963 ",34%
+Pharmacies,Paid Social,meta,257,5%," € 2,708 ",3%
+Pharmacies,Paid Social,tiktok,1,0%, € 18 ,0%
+Pharmacies,Referral,asknaos,14,0%, € 263 ,0%
+Pharmacies,AI Engine,chatgpt.com,15,0%, € 294 ,0%
+Zalando,Direct,Direct,236,22%, € -   ,0%
+Zalando,Organic Search,bing,12,1%, € -   ,0%
+Zalando,Organic Search,duckduckgo,2,0%, € -   ,0%
+Zalando,Organic Search,google,496,46%, € -   ,0%
+Zalando,Organic Social,IGShopping,1,0%, € -   ,0%
+Zalando,Paid Search,google,315,29%, € -   ,0%
+Zalando,Paid Social,meta,10,1%, € -   ,0%
+Zalando,Referral,asknaos,3,0%, € -   ,0%
+Zalando,AI Engine,chatgpt.com,6,1%, € -   ,0%
+Shop Apotheke,Direct,Direct,"1,924",23%," € 3,194 ",21%
+Shop Apotheke,Organic Search,bing,215,3%, € 268 ,2%
+Shop Apotheke,Organic Search,duckduckgo,28,0%, € 74 ,0%
+Shop Apotheke,Organic Search,google,"3,267",40%," € 5,737 ",38%
+Shop Apotheke,Organic Search,qwant,2,0%, € -   ,0%
+Shop Apotheke,Organic Search,reddit,2,0%, € -   ,0%
+Shop Apotheke,Organic Social,IGShopping,1,0%, € -   ,0%
+Shop Apotheke,Organic Social,meta,4,0%, € -   ,0%
+Shop Apotheke,Organic Video,youtube,2,0%, € -   ,0%
+Shop Apotheke,Paid Search,google,"2,481",30%," € 5,184 ",34%
+Shop Apotheke,Paid Social,meta,214,3%, € 455 ,3%
+Shop Apotheke,Paid Social,tiktok,14,0%, € -   ,0%
+Shop Apotheke,Referral,asknaos,16,0%, € 138 ,1%
+Shop Apotheke,Referral,Awin,4,0%, € -   ,0%
+Shop Apotheke,Referral,erezept,1,0%, € -   ,0%
+Shop Apotheke,AI Engine,chatgpt.com,32,0%, € 30 ,0%
+Sanicare,Direct,Direct,244,26%, € 274 ,33%
+Sanicare,Organic Search,bing,16,2%, € 65 ,8%
+Sanicare,Organic Search,duckduckgo,5,1%, € -   ,0%
+Sanicare,Organic Search,google,374,40%, € 225 ,27%
+Sanicare,Organic Social,meta,1,0%, € -   ,0%
+Sanicare,Paid Search,google,275,30%, € 255 ,31%
+Sanicare,Paid Social,meta,8,1%, € -   ,0%
+Sanicare,Referral,asknaos,3,0%, € -   ,0%
+Sanicare,AI Engine,chatgpt.com,2,0%, € -   ,0%
+MedPex,Direct,Direct,373,25%, € 360 ,21%
+MedPex,Organic Search,bing,23,2%, € -   ,0%
+MedPex,Organic Search,duckduckgo,7,0%, € -   ,0%
+MedPex,Organic Search,google,579,39%, € 674 ,40%
+MedPex,Organic Search,qwant,2,0%, € -   ,0%
+MedPex,Organic Social,meta,1,0%, € -   ,0%
+MedPex,Organic Video,youtube,1,0%, € -   ,0%
+MedPex,Paid Search,google,469,32%, € 646 ,38%
+MedPex,Paid Social,meta,9,1%, € -   ,0%
+MedPex,Referral,asknaos,2,0%, € -   ,0%
+MedPex,AI Engine,chatgpt.com,5,0%, € -   ,0%
+MPK,Direct,Direct,239,26%, € -   ,0%
+MPK,Organic Search,bing,14,2%, € -   ,0%
+MPK,Organic Search,duckduckgo,3,0%, € -   ,0%
+MPK,Organic Search,google,378,41%, € -   ,0%
+MPK,Paid Search,google,282,30%, € -   ,0%
+MPK,Paid Social,meta,7,1%, € -   ,0%
+MPK,Referral,asknaos,5,1%, € -   ,0%
+MPK,AI Engine,chatgpt.com,1,0%, € -   ,0%
+Flaconi,Direct,Direct,150,24%, € 175 ,31%
+Flaconi,Organic Search,bing,11,2%, € 19 ,3%
+Flaconi,Organic Search,duckduckgo,4,1%, € -   ,0%
+Flaconi,Organic Search,google,222,36%, € 227 ,40%
+Flaconi,Paid Search,google,218,35%, € 142 ,25%
+Flaconi,Paid Social,meta,13,2%, € -   ,0%
+Flaconi,Referral,Awin,2,0%, € -   ,0%
+Flaconi,AI Engine,chatgpt.com,5,1%, € -   ,0%
+DocMorris,Direct,Direct,616,23%, € 353 ,14%
+DocMorris,Organic Search,bing,51,2%, € 82 ,3%
+DocMorris,Organic Search,duckduckgo,15,1%, € 82 ,3%
+DocMorris,Organic Search,google,"1,111",41%," € 1,122 ",44%
+DocMorris,Organic Social,IGShopping,3,0%, € -   ,0%
+DocMorris,Organic Social,meta,2,0%, € 30 ,1%
+DocMorris,Paid Search,google,880,32%, € 803 ,31%
+DocMorris,Paid Social,meta,25,1%, € -   ,0%
+DocMorris,Referral,asknaos,7,0%, € 27 ,1%
+DocMorris,Referral,Awin,1,0%, € -   ,0%
+DocMorris,AI Engine,chatgpt.com,6,0%, € 63 ,2%
+ApoDiscounter,Direct,Direct,650,25%, € 219 ,23%
+ApoDiscounter,Organic Search,bing,29,1%, € -   ,0%
+ApoDiscounter,Organic Search,duckduckgo,6,0%, € -   ,0%
+ApoDiscounter,Organic Search,google,"1,101",42%, € 327 ,34%
+ApoDiscounter,Organic Social,IGShopping,2,0%, € -   ,0%
+ApoDiscounter,Organic Social,meta,1,0%, € -   ,0%
+ApoDiscounter,Paid Search,google,814,31%, € 425 ,44%
+ApoDiscounter,Paid Social,meta,22,1%, € -   ,0%
+ApoDiscounter,Referral,asknaos,7,0%, € -   ,0%
+ApoDiscounter,AI Engine,chatgpt.com,9,0%, € -   ,0%
